@@ -23,14 +23,20 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
+    minify: 'terser',
+    target: 'es2015',
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          charts: ['recharts', 'chart.js', 'react-chartjs-2'],
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          charts: ['recharts', 'chart.js', 'react-chartjs-2', 'react-force-graph-2d'],
           ui: ['framer-motion', 'lucide-react'],
+          supabase: ['@supabase/supabase-js']
         },
       },
     },
+    chunkSizeWarningLimit: 1000,
   },
+  base: '/',
+  publicDir: 'public',
 });

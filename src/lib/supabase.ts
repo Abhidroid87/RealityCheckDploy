@@ -1,25 +1,60 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Use environment variables with better fallbacks for development
+// Use environment variables with better fallbacks for production
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Check if we have valid Supabase credentials
+// Enhanced validation for production deployment
 const hasValidCredentials = supabaseUrl && 
   supabaseKey && 
   supabaseUrl !== 'https://your-project.supabase.co' && 
   supabaseKey !== 'your-anon-key' &&
   supabaseUrl.startsWith('https://') &&
-  supabaseUrl.includes('.supabase.co');
+  supabaseUrl.includes('.supabase.co') &&
+  supabaseKey.length > 20; // Basic validation for key length
 
-// Create client with mock credentials if real ones aren't available
+if (!hasValidCredentials) {
+  console.error('Supabase configuration error:', {
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseKey,
+    urlValid: supabaseUrl?.startsWith('https://') && supabaseUrl?.includes('.supabase.co'),
+    keyValid: supabaseKey && supabaseKey.length > 20
+  });
+}
+
+// Create client with proper error handling
 export const supabase = createClient(
-  hasValidCredentials ? supabaseUrl : 'https://mock.supabase.co',
-  hasValidCredentials ? supabaseKey : 'mock-key'
+  hasValidCredentials ? supabaseUrl : 'https://placeholder.supabase.co',
+  hasValidCredentials ? supabaseKey : 'placeholder-key',
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+    realtime: {
+      params: {
+        eventsPerSecond: 10
+      }
+    }
+  }
 );
 
 // Export a flag to check if we're using real Supabase
 export const isSupabaseConfigured = hasValidCredentials;
+
+// Add connection test function
+export const testSupabaseConnection = async () => {
+  if (!hasValidCredentials) {
+    return { connected: false, error: 'Invalid credentials' };
+  }
+
+  try {
+    const { data, error } = await supabase.from('articles').select('count').limit(1);
+    return { connected: !error, error: error?.message };
+  } catch (error) {
+    return { connected: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+};
 
 export type Database = {
   public: {
