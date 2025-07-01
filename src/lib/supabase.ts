@@ -49,7 +49,7 @@ export const testSupabaseConnection = async () => {
   }
 
   try {
-    const { data, error } = await supabase.from('articles').select('count').limit(1);
+    const { error } = await supabase.from('your_table_name').select('*');
     return { connected: !error, error: error?.message };
   } catch (error) {
     return { connected: false, error: error instanceof Error ? error.message : 'Unknown error' };
