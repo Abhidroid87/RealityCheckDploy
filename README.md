@@ -158,7 +158,7 @@ ollama pull mistral
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+##  Support
 
 - Create an issue for bugs or feature requests
 - Check the documentation for setup help
