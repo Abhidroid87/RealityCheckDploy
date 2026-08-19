@@ -1,0 +1,1 @@
+import{c as e}from"./supabase-CoHBoZ76.js";const s=void 0,a=s;console.error("Supabase configuration error:",{hasUrl:!1,hasKey:!1,urlValid:void 0,keyValid:void 0});const o=e("https://placeholder.supabase.co","placeholder-key",{auth:{persistSession:!0,autoRefreshToken:!0},realtime:{params:{eventsPerSecond:10}}}),r=a;export{r as i,o as s};

@@ -54,7 +54,7 @@ const EventTimelinePage: React.FC = () => {
   }, [slug]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isPlaying && timeline) {
       interval = setInterval(() => {
         setCurrentEventIndex(prev => {
