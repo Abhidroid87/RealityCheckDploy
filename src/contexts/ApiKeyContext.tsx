@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { ollamaService } from '../services/ai/ollamaService';
 
 interface ApiKeys {
   openai: string;
@@ -86,6 +87,8 @@ const ApiKeyProvider: React.FC<ApiKeyProviderProps> = ({ children }) => {
 
   // Save API keys to localStorage when they change
   useEffect(() => {
+    ollamaService.setBaseUrl(apiKeys.ollama);
+
     // Only save non-empty keys to localStorage
     const keysToSave: Partial<ApiKeys> = {};
     Object.entries(apiKeys).forEach(([key, value]) => {

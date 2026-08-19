@@ -94,6 +94,21 @@ npm run dev
 ```
 
 ### Ollama Setup (Optional)
+
+For the deployed Vercel site, Ollama runs on the same computer as the browser and must allow the site origin. Start it with:
+
+```bash
+OLLAMA_ORIGINS=https://reality-check-dploy.vercel.app,http://localhost:5173 ollama serve
+```
+
+If Ollama is already running as a service, stop that service first or update its environment and restart it. Confirm it responds before opening the site:
+
+```bash
+curl http://localhost:11434/api/tags
+```
+
+The Ollama endpoint can also be changed in Settings under `Ollama (Local)`. A remote endpoint must be reachable by the browser over HTTPS and must allow the Vercel origin in `OLLAMA_ORIGINS`; do not expose an unauthenticated Ollama port directly to the public internet.
+
 ```bash
 # Install Ollama
 curl -fsSL https://ollama.ai/install.sh | sh

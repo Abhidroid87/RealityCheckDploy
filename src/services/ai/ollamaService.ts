@@ -84,7 +84,11 @@ class OllamaService {
           throw new Error('Ollama connection timeout. Please ensure Ollama is running and accessible.');
         }
         if (error instanceof TypeError || error.message === 'Failed to fetch') {
-          throw new Error('Cannot connect to Ollama. Please ensure:\n1. Ollama is installed and running (run "ollama serve")\n2. Ollama is accessible at ' + this.baseUrl + '\n3. No firewall is blocking the connection');
+          const isLocalhost = /localhost|127\.0\.0\.1/.test(this.baseUrl);
+          const guidance = isLocalhost
+            ? 'Because this app is running from a deployed website, localhost means the computer running your browser. Ollama must run on that same computer and allow this site via OLLAMA_ORIGINS.'
+            : 'Check that the endpoint is reachable from your browser and allows this site via OLLAMA_ORIGINS.';
+          throw new Error(`Cannot connect to Ollama at ${this.baseUrl}. ${guidance}`);
         }
         if (error.message.includes('CORS')) {
           throw new Error('CORS error connecting to Ollama. You may need to start Ollama with CORS enabled:\nOLLAMA_ORIGINS=* ollama serve');
@@ -254,7 +258,8 @@ class OllamaService {
    * Set a custom Ollama base URL
    */
   setBaseUrl(url: string): void {
-    this.baseUrl = url;
+    const normalizedUrl = url.trim().replace(/\/$/, '');
+    this.baseUrl = normalizedUrl || 'http://localhost:11434';
   }
 }
 
